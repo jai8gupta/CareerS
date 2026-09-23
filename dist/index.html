@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101828">
+  <meta name="description" content="Practise interviews and workplace conversations with focused, useful feedback.">
+  <title>CareerSpeak — Career rehearsal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23101828'/%3E%3Cpath d='M9 11.5A3.5 3.5 0 0 1 12.5 8h7a3.5 3.5 0 0 1 3.5 3.5v5a3.5 3.5 0 0 1-3.5 3.5H16l-4.7 4v-4A3.5 3.5 0 0 1 9 16.5z' fill='%23c7f36b'/%3E%3Cpath d='M13 13h6M13 16h4' stroke='%23101828' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #101828;
+      --ink-soft: #344054;
+      --muted: #667085;
+      --line: #dfe4ea;
+      --surface: #ffffff;
+      --wash: #f4f7fb;
+      --lime: #c7f36b;
+      --lime-deep: #9ed33f;
+      --blue: #4b7bec;
+      --blue-pale: #eaf0ff;
+      --coral: #fa745a;
+      --coral-pale: #fff0ed;
+      --shadow: 0 20px 55px rgba(16, 24, 40, .10);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { color-scheme: light; scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% -10%, rgba(199, 243, 107, .28), transparent 27rem),
+        linear-gradient(180deg, #fbfcfe 0%, #f1f5fa 100%);
+      font: 16px/1.55 "DM Sans", system-ui, sans-serif;
+    }
+
+    button, textarea { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, textarea:focus-visible { outline: 3px solid rgba(75, 123, 236, .34); outline-offset: 2px; }
+
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+
+    header {
+      min-height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; font-family: "Manrope", sans-serif; font-weight: 800; letter-spacing: -.04em; font-size: 1.2rem; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--ink); color: var(--lime); box-shadow: 0 9px 20px rgba(16,24,40,.18); }
+    .brand-mark svg { width: 22px; height: 22px; }
+
+    .header-meta { display: flex; align-items: center; gap: 10px; }
+    .streak { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.72); font-size: .9rem; font-weight: 700; }
+    .streak svg { width: 18px; height: 18px; color: var(--coral); }
+    .avatar { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 0; background: var(--blue-pale); color: var(--blue); font-weight: 800; cursor: pointer; }
+
+    main { padding: 34px 0 60px; }
+
+    .intro { display: flex; justify-content: space-between; align-items: end; gap: 32px; margin-bottom: 26px; }
+    .eyebrow { display: inline-flex; gap: 8px; align-items: center; margin-bottom: 9px; color: var(--blue); font-weight: 700; font-size: .86rem; letter-spacing: .04em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--blue); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 8px; font: 800 clamp(2rem, 4vw, 3.45rem)/1.03 "Manrope", sans-serif; letter-spacing: -.055em; max-width: 700px; }
+    .intro p { margin-bottom: 0; color: var(--muted); max-width: 620px; font-size: 1.04rem; }
+    .session-count { flex: 0 0 auto; padding: 12px 16px; border-radius: 14px; background: var(--ink); color: #fff; font-weight: 700; font-size: .9rem; }
+    .session-count strong { color: var(--lime); }
+
+    .workspace { display: grid; grid-template-columns: minmax(260px, .72fr) minmax(0, 1.55fr); gap: 22px; align-items: start; }
+    .panel { background: rgba(255,255,255,.92); border: 1px solid rgba(205,213,223,.88); border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+    .setup { padding: 24px; position: sticky; top: 18px; }
+    .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .panel-title h2 { margin: 0; font: 750 1.05rem/1.2 "Manrope", sans-serif; letter-spacing: -.025em; }
+    .panel-title span { color: var(--muted); font-size: .8rem; }
+
+    .tracks { display: grid; gap: 8px; }
+    .track {
+      width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px;
+      border: 1px solid transparent; border-radius: 14px; background: transparent; text-align: left; cursor: pointer; transition: .18s ease;
+    }
+    .track:hover { background: var(--wash); }
+    .track[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: white; }
+    .track-icon { width: 36px; height: 36px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 10px; background: var(--wash); color: var(--ink-soft); }
+    .track[aria-pressed="true"] .track-icon { background: var(--lime); color: var(--ink); }
+    .track-icon svg { width: 18px; height: 18px; }
+    .track strong { display: block; font-size: .92rem; }
+    .track small { display: block; color: var(--muted); font-size: .75rem; margin-top: 1px; }
+    .track[aria-pressed="true"] small { color: #cbd3df; }
+
+    .setup-footer { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .progress-copy { display: flex; justify-content: space-between; color: var(--muted); font-size: .82rem; margin-bottom: 8px; }
+    .progress-bar { height: 8px; background: #e9edf2; border-radius: 999px; overflow: hidden; }
+    .progress-bar span { display: block; width: 38%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), #7aa2ff); }
+
+    .practice { min-width: 0; overflow: hidden; }
+    .practice-head { padding: 24px 26px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .crumb { color: var(--muted); font-size: .83rem; font-weight: 600; }
+    .difficulty { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border-radius: 999px; background: var(--wash); color: var(--ink-soft); font-size: .78rem; font-weight: 700; }
+    .difficulty::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #f4b740; }
+
+    .prompt-card { margin: 18px 26px 22px; padding: 25px; border-radius: 20px; color: #fff; background: var(--ink); position: relative; overflow: hidden; }
+    .prompt-card::after { content: ""; position: absolute; width: 180px; height: 180px; border-radius: 50%; right: -76px; top: -72px; border: 30px solid rgba(199,243,107,.12); }
+    .prompt-kicker { color: var(--lime); text-transform: uppercase; font-size: .75rem; letter-spacing: .11em; font-weight: 800; }
+    .prompt-card h2 { position: relative; z-index: 1; margin: 9px 0 10px; max-width: 670px; font: 700 clamp(1.25rem, 2.6vw, 1.75rem)/1.28 "Manrope", sans-serif; letter-spacing: -.025em; }
+    .prompt-card p { margin: 0; color: #bdc7d7; font-size: .9rem; }
+
+    .response { padding: 0 26px 26px; }
+    .response-label { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-bottom: 10px; font-weight: 700; font-size: .92rem; }
+    .timer { font-variant-numeric: tabular-nums; color: var(--muted); font-size: .84rem; }
+    .answer-box { position: relative; }
+    textarea { width: 100%; min-height: 182px; resize: vertical; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-md); background: #fbfcfe; color: var(--ink); line-height: 1.6; transition: .18s ease; }
+    textarea::placeholder { color: #98a2b3; }
+    textarea:focus { border-color: var(--blue); background: white; }
+    .listening { border-color: var(--coral) !important; box-shadow: 0 0 0 4px rgba(250,116,90,.10); }
+
+    .record-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 14px; }
+    .record-actions { display: flex; align-items: center; gap: 10px; }
+    .mic-btn { width: 48px; height: 48px; border: 0; border-radius: 50%; display: grid; place-items: center; background: var(--coral); color: #fff; cursor: pointer; box-shadow: 0 10px 22px rgba(250,116,90,.28); transition: .18s ease; }
+    .mic-btn:hover { transform: translateY(-2px); }
+    .mic-btn.active { animation: pulse 1.35s infinite; }
+    .mic-btn svg { width: 21px; height: 21px; }
+    .record-copy strong, .record-copy small { display: block; }
+    .record-copy strong { font-size: .88rem; }
+    .record-copy small { color: var(--muted); font-size: .76rem; }
+    .btn { border: 0; border-radius: 13px; padding: 12px 17px; font-weight: 800; cursor: pointer; transition: .18s ease; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--lime); color: var(--ink); box-shadow: 0 9px 20px rgba(158,211,63,.2); }
+    .btn-primary:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-quiet { background: var(--wash); color: var(--ink-soft); }
+    .demo-link { padding: 0; border: 0; background: transparent; color: var(--blue); font-size: .82rem; font-weight: 700; cursor: pointer; }
+
+    .notice { display: none; margin-top: 12px; padding: 11px 13px; border-radius: 12px; background: #fff8e8; color: #7a5412; font-size: .82rem; }
+    .notice.show { display: block; }
+
+    .results { display: none; padding: 0 26px 26px; }
+    .results.show { display: block; animation: lift .35s ease both; }
+    .scoreboard { display: grid; grid-template-columns: 150px 1fr; gap: 20px; padding: 20px; border-radius: 20px; background: var(--wash); }
+    .score-ring { --score: 0; width: 126px; height: 126px; display: grid; place-items: center; position: relative; border-radius: 50%; background: conic-gradient(var(--blue) calc(var(--score) * 1%), #dde4ed 0); }
+    .score-ring::before { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: var(--wash); }
+    .score-number { position: relative; text-align: center; font: 800 2.1rem/1 "Manrope", sans-serif; letter-spacing: -.05em; }
+    .score-number small { display: block; margin-top: 5px; font: 600 .72rem/1 "DM Sans", sans-serif; color: var(--muted); letter-spacing: 0; }
+    .score-copy h3 { margin: 4px 0 7px; font: 750 1.18rem/1.2 "Manrope", sans-serif; }
+    .score-copy p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-top: 16px; }
+    .metric { padding: 12px; background: white; border: 1px solid var(--line); border-radius: 13px; }
+    .metric span { display: block; color: var(--muted); font-size: .72rem; }
+    .metric strong { display: block; margin-top: 3px; font: 750 1rem/1.1 "Manrope", sans-serif; }
+
+    .feedback-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .feedback { padding: 17px; border: 1px solid var(--line); border-radius: 16px; }
+    .feedback.good { background: #f3fae7; border-color: #d4eab0; }
+    .feedback.improve { background: var(--coral-pale); border-color: #ffd2ca; }
+    .feedback h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font: 750 .95rem/1.2 "Manrope", sans-serif; }
+    .feedback h3 svg { width: 18px; height: 18px; }
+    .feedback p { margin: 0; color: var(--ink-soft); font-size: .86rem; }
+
+    .better-answer { margin-top: 14px; padding: 19px; border-left: 4px solid var(--blue); border-radius: 4px 15px 15px 4px; background: var(--blue-pale); }
+    .better-answer h3 { margin-bottom: 7px; color: var(--blue); font: 800 .8rem/1.2 "Manrope", sans-serif; text-transform: uppercase; letter-spacing: .07em; }
+    .better-answer p { margin: 0; color: #294578; font-size: .9rem; }
+    .result-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+
+    .footer-note { margin-top: 18px; color: var(--muted); text-align: center; font-size: .78rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(250,116,90,.38); } 70% { box-shadow: 0 0 0 13px rgba(250,116,90,0); } 100% { box-shadow: 0 0 0 0 rgba(250,116,90,0); } }
+    @keyframes lift { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 800px) {
+      .shell { width: min(100% - 22px, 680px); }
+      header { min-height: 70px; }
+      main { padding-top: 20px; }
+      .intro { align-items: start; margin-bottom: 20px; }
+      .session-count { display: none; }
+      .workspace { grid-template-columns: 1fr; }
+      .workspace > * { min-width: 0; }
+      .setup { position: static; padding: 16px; }
+      .panel-title { margin-bottom: 12px; }
+      .tracks { display: flex; overflow-x: auto; padding-bottom: 3px; scrollbar-width: none; }
+      .tracks::-webkit-scrollbar { display: none; }
+      .track { min-width: 184px; }
+      .setup-footer { display: none; }
+      .practice-head { padding: 18px 18px 0; }
+      .prompt-card { margin: 15px 18px 18px; padding: 20px; }
+      .response, .results { padding: 0 18px 20px; }
+    }
+
+    @media (max-width: 560px) {
+      h1 { font-size: 2.18rem; }
+      .intro p { font-size: .96rem; }
+      .streak span { display: none; }
+      .record-row { align-items: flex-end; }
+      .record-actions { flex: 1; }
+      .btn-primary { margin-left: auto; }
+      .scoreboard { grid-template-columns: 1fr; text-align: center; }
+      .score-ring { margin: 0 auto; }
+      .metric-grid { grid-template-columns: 1fr 1fr; text-align: left; }
+      .feedback-grid { grid-template-columns: 1fr; }
+      .result-actions { flex-direction: column-reverse; }
+      .result-actions .btn { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <div class="brand" aria-label="CareerSpeak home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6.8A3.8 3.8 0 0 1 7.8 3h8.4A3.8 3.8 0 0 1 20 6.8v5.4a3.8 3.8 0 0 1-3.8 3.8H12l-5 4v-4.1a3.8 3.8 0 0 1-3-3.7V6.8Z" fill="currentColor"/><path d="M8 8h8M8 11.5h5" stroke="#101828" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </span>
+      CareerSpeak
+    </div>
+    <div class="header-meta">
+      <div class="streak" title="Practice streak">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M13.5 2.8c.5 3.2-2.2 4.6-2.2 7.2 0 1.1.7 1.9 1.7 1.9 1.6 0 2.7-1.6 2.3-3.7 2.5 1.7 4.2 4.2 4.2 7.1A7.5 7.5 0 0 1 4.5 15c0-4.1 2.4-7.4 6.5-10-.2 2.6.6 3.7 1.4 3.8.9-1.5 1.2-3.5 1.1-6Z" fill="currentColor"/></svg>
+        <span><strong id="streakCount">4</strong> day streak</span>
+      </div>
+      <button class="avatar" aria-label="Open profile">JG</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <div class="eyebrow">Today’s 5-minute practice</div>
+        <h1 id="page-title">Sound ready when it matters.</h1>
+        <p>Practise one real career moment. Get clear feedback, then try again with a stronger answer.</p>
+      </div>
+      <div class="session-count"><strong id="completedCount">2</strong> of 5 sessions this week</div>
+    </section>
+
+    <div class="workspace">
+      <aside class="panel setup" aria-label="Choose a practice track">
+        <div class="panel-title"><h2>Practice track</h2><span>Choose one</span></div>
+        <div class="tracks" id="trackList">
+          <button class="track" aria-pressed="true" data-track="hr">
+            <span class="track-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 7a4 4 0 1 1 8 0v2a4 4 0 1 1-8 0V7Zm-3 14v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span><strong>HR interview</strong><small>Confidence & stories</small></span>
+          </button>
+          <button class="track" aria-pressed="false" data-track="technical">
+            <span class="track-icon"><svg viewBox="0 0 24 24" fill="none"><path d="m8 8-4 4 4 4m8-8 4 4-4 4m-2-11-4 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span><strong>Technical interview</strong><small>Explain your thinking</small></span>
+          </button>
+          <button class="track" aria-pressed="false" data-track="workplace">
+            <span class="track-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V8h16v12M8 8V4h8v4M3 20h18M8 12h2m4 0h2m-8 4h2m4 0h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span><strong>Workplace</strong><small>Updates & meetings</small></span>
+          </button>
+          <button class="track" aria-pressed="false" data-track="client">
+            <span class="track-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 10h8M8 14h5M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-7l-5 3v-3H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span><strong>Client conversations</strong><small>Clarity under pressure</small></span>
+          </button>
+          <button class="track" aria-pressed="false" data-track="presentation">
+            <span class="track-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v11H4V4Zm4 16 4-5 4 5M12 4V2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span><strong>Presentations</strong><small>Structure your message</small></span>
+          </button>
+        </div>
+        <div class="setup-footer">
+          <div class="progress-copy"><span>Interview readiness</span><strong id="readiness">38%</strong></div>
+          <div class="progress-bar" aria-label="Interview readiness 38 percent"><span id="readinessBar"></span></div>
+        </div>
+      </aside>
+
+      <section class="panel practice" aria-label="Speaking practice">
+        <div class="practice-head">
+          <div class="crumb" id="trackName">HR interview · Question 1 of 5</div>
+          <div class="difficulty">Warm-up</div>
+        </div>
+
+        <div class="prompt-card">
+          <div class="prompt-kicker">Your prompt</div>
+          <h2 id="promptText">Tell me about yourself and why you’re interested in this role.</h2>
+          <p id="promptHint">Aim for 60–90 seconds. Connect your background, strengths and motivation.</p>
+        </div>
+
+        <div class="response" id="responseSection">
+          <div class="response-label"><label for="answer">Your answer</label><span class="timer" id="timer">00:00 / 02:00</span></div>
+          <div class="answer-box">
+            <textarea id="answer" placeholder="Tap the microphone and speak naturally, or type your answer here." aria-describedby="speechNotice"></textarea>
+          </div>
+          <div class="record-row">
+            <div class="record-actions">
+              <button class="mic-btn" id="micButton" aria-label="Start voice answer" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="8" y="3" width="8" height="12" rx="4" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-3 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+              <div class="record-copy"><strong id="recordTitle">Record your answer</strong><small id="recordHint">Works best in Chrome or Edge</small></div>
+            </div>
+            <button class="btn btn-primary" id="analyseButton" disabled>Get feedback →</button>
+          </div>
+          <div class="notice" id="speechNotice" role="status">Voice recognition is not available in this browser. You can still type your answer and get feedback.</div>
+          <button class="demo-link" id="demoButton">Use a sample answer to preview feedback</button>
+        </div>
+
+        <div class="results" id="results" aria-live="polite">
+          <div class="scoreboard">
+            <div class="score-ring" id="scoreRing"><div class="score-number"><span id="score">0</span><small>overall score</small></div></div>
+            <div class="score-copy">
+              <h3 id="scoreHeadline">Good foundation. Now make it sharper.</h3>
+              <p id="scoreSummary">Your answer is easy to follow. Add one concrete result and remove a few filler phrases to sound more confident.</p>
+              <div class="metric-grid">
+                <div class="metric"><span>Clarity</span><strong id="clarityScore">—</strong></div>
+                <div class="metric"><span>Structure</span><strong id="structureScore">—</strong></div>
+                <div class="metric"><span>Filler words</span><strong id="fillerCount">—</strong></div>
+                <div class="metric"><span>Answer length</span><strong id="wordCount">—</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feedback-grid">
+            <article class="feedback good">
+              <h3><svg viewBox="0 0 24 24" fill="none"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>What worked</h3>
+              <p id="workedText">You answered directly and used simple, professional language.</p>
+            </article>
+            <article class="feedback improve">
+              <h3><svg viewBox="0 0 24 24" fill="none"><path d="M12 8v5m0 3.5v.1M10.3 4.2 3.6 16A2 2 0 0 0 5.3 19h13.4a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Try this next</h3>
+              <p id="improveText">Use a three-part structure: present role, strongest proof, and why this opportunity fits.</p>
+            </article>
+          </div>
+
+          <div class="better-answer">
+            <h3>A stronger version</h3>
+            <p id="betterAnswer">I’m a final-year computer science student who enjoys turning ambiguous problems into simple products. During my internship, I built a support dashboard that reduced weekly reporting time by six hours. I’m now looking for a role where I can combine that practical engineering experience with strong customer understanding, which is what attracted me to this team.</p>
+          </div>
+
+          <div class="result-actions">
+            <button class="btn btn-quiet" id="newPromptButton">Choose another track</button>
+            <button class="btn btn-primary" id="retryButton">Retry this answer ↻</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <p class="footer-note">Private by design — this prototype analyses your words in the browser and stores progress only on this device.</p>
+  </main>
+
+  <script>
+    const scenarios = {
+      hr: {
+        name: "HR interview",
+        prompt: "Tell me about yourself and why you’re interested in this role.",
+        hint: "Aim for 60–90 seconds. Connect your background, strengths and motivation.",
+        better: "I’m a final-year computer science student who enjoys turning ambiguous problems into simple products. During my internship, I built a support dashboard that reduced weekly reporting time by six hours. I’m now looking for a role where I can combine that practical engineering experience with strong customer understanding, which is what attracted me to this team."
+      },
+      technical: {
+        name: "Technical interview",
+        prompt: "Explain a difficult technical problem you solved and how you approached it.",
+        hint: "Set the context, explain your decisions, then share the measurable result.",
+        better: "Our checkout API was timing out during peak traffic. I traced the bottleneck to repeated database queries, added request-level caching, and tested the change against production-like traffic. The update reduced median response time from 1.8 seconds to 420 milliseconds and eliminated the timeout alerts."
+      },
+      workplace: {
+        name: "Workplace communication",
+        prompt: "Give your manager a clear update about work that is running behind schedule.",
+        hint: "State the status, cause, impact and the next action you recommend.",
+        better: "The reporting feature is two days behind because the source data has an unexpected format. I’ve completed the interface and isolated the remaining issue to the import step. I’m pairing with the data team today and will share a tested build by 4 p.m. tomorrow. The delay does not affect the wider release."
+      },
+      client: {
+        name: "Client conversation",
+        prompt: "A client is unhappy with a delay. Respond calmly and propose a next step.",
+        hint: "Acknowledge the concern, take ownership and give a specific recovery plan.",
+        better: "I understand why this delay is frustrating, especially with your launch approaching. We should have communicated the risk earlier. The core fix is now complete, and I’ll send you a tested version by 3 p.m. today, followed by a short call to confirm everything works as expected."
+      },
+      presentation: {
+        name: "Presentation practice",
+        prompt: "Open a presentation proposing one practical improvement for your team.",
+        hint: "Lead with the problem, your recommendation and the benefit to the audience.",
+        better: "We currently spend nearly a day each week combining updates from three separate trackers. I propose moving the team to one shared weekly dashboard. It would give everyone the same view of priorities and return roughly twenty hours to the team each month."
+      }
+    };
+
+    const sample = "I am a final year computer science student and I have worked on two web projects. In my internship I created a dashboard for the support team, which reduced their weekly reporting time by six hours. I enjoy solving practical problems with technology, and I am interested in this role because I want to learn from an experienced product team while contributing my frontend skills.";
+    const fillerPattern = /\b(um+|uh+|like|basically|actually|you know|sort of|kind of)\b/gi;
+    const structurePattern = /\b(first|then|because|result|finally|during|after|so that|which|while)\b/gi;
+    const state = { track: "hr", listening: false, seconds: 0, timerId: null, recognition: null };
+
+    const $ = id => document.getElementById(id);
+    const answer = $("answer");
+    const analyseButton = $("analyseButton");
+    const micButton = $("micButton");
+    const results = $("results");
+    const responseSection = $("responseSection");
+
+    function updateTimer() {
+      state.seconds += 1;
+      const minutes = String(Math.floor(state.seconds / 60)).padStart(2, "0");
+      const seconds = String(state.seconds % 60).padStart(2, "0");
+      $("timer").textContent = `${minutes}:${seconds} / 02:00`;
+      if (state.seconds >= 120) stopListening();
+    }
+
+    function stopListening() {
+      if (state.recognition && state.listening) state.recognition.stop();
+      state.listening = false;
+      clearInterval(state.timerId);
+      micButton.classList.remove("active");
+      micButton.setAttribute("aria-pressed", "false");
+      micButton.setAttribute("aria-label", "Start voice answer");
+      answer.classList.remove("listening");
+      $("recordTitle").textContent = "Record your answer";
+      $("recordHint").textContent = "Works best in Chrome or Edge";
+    }
+
+    function startListening() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        $("speechNotice").classList.add("show");
+        answer.focus();
+        return;
+      }
+      if (state.listening) { stopListening(); return; }
+      state.recognition = new SpeechRecognition();
+      state.recognition.lang = "en-IN";
+      state.recognition.continuous = true;
+      state.recognition.interimResults = true;
+      let confirmed = answer.value ? answer.value.trim() + " " : "";
+      state.recognition.onresult = event => {
+        let interim = "";
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          const words = event.results[i][0].transcript;
+          if (event.results[i].isFinal) confirmed += words + " "; else interim += words;
+        }
+        answer.value = (confirmed + interim).trim();
+        analyseButton.disabled = answer.value.trim().length < 20;
+      };
+      state.recognition.onerror = () => { stopListening(); $("speechNotice").classList.add("show"); };
+      state.recognition.onend = () => { if (state.listening) stopListening(); };
+      state.recognition.start();
+      state.listening = true;
+      state.seconds = 0;
+      clearInterval(state.timerId);
+      state.timerId = setInterval(updateTimer, 1000);
+      micButton.classList.add("active");
+      micButton.setAttribute("aria-pressed", "true");
+      micButton.setAttribute("aria-label", "Stop voice answer");
+      answer.classList.add("listening");
+      $("recordTitle").textContent = "Listening… tap to stop";
+      $("recordHint").textContent = "Speak naturally — pauses are okay";
+    }
+
+    function analyse() {
+      stopListening();
+      const text = answer.value.trim();
+      if (text.length < 20) return;
+      const words = text.split(/\s+/).filter(Boolean);
+      const fillers = text.match(fillerPattern) || [];
+      const connectors = text.match(structurePattern) || [];
+      const sentences = text.split(/[.!?]+/).filter(part => part.trim().length > 3);
+      const lengthScore = Math.max(45, Math.min(96, 100 - Math.abs(85 - words.length) * .55));
+      const fillerPenalty = Math.min(24, fillers.length * 4);
+      const clarity = Math.round(Math.max(52, Math.min(96, lengthScore - fillerPenalty + (sentences.length >= 3 ? 5 : 0))));
+      const structure = Math.round(Math.max(48, Math.min(96, 58 + connectors.length * 5 + (sentences.length >= 3 ? 8 : 0))));
+      const overall = Math.round(clarity * .5 + structure * .5);
+
+      $("score").textContent = overall;
+      $("scoreRing").style.setProperty("--score", overall);
+      $("clarityScore").textContent = `${clarity}%`;
+      $("structureScore").textContent = `${structure}%`;
+      $("fillerCount").textContent = fillers.length;
+      $("wordCount").textContent = `${words.length} words`;
+      $("scoreHeadline").textContent = overall >= 82 ? "Strong answer. Make it memorable." : overall >= 68 ? "Good foundation. Now make it sharper." : "Clear start. Add structure and proof.";
+      $("scoreSummary").textContent = fillers.length > 2
+        ? "Your main idea comes through. Slow down, replace filler words with short pauses, and add one measurable result."
+        : words.length < 45
+          ? "You answered directly. Add one concrete example and its result so the listener has evidence to remember."
+          : "Your answer is easy to follow. One more specific result will make it sound confident and credible.";
+      $("workedText").textContent = connectors.length >= 2
+        ? "You connected your ideas logically and kept the language direct and professional."
+        : "You stayed relevant to the question and used straightforward professional language.";
+      $("improveText").textContent = fillers.length > 2
+        ? `You used ${fillers.length} filler words. Replace them with a one-second pause and stress the result of your example.`
+        : "Use a three-part structure: context, the action you took, and a specific outcome.";
+      $("betterAnswer").textContent = scenarios[state.track].better;
+
+      const completed = Number(localStorage.getItem("careerspeak-completed") || 2) + 1;
+      localStorage.setItem("careerspeak-completed", completed);
+      $("completedCount").textContent = Math.min(completed, 5);
+      const readiness = Math.min(92, 38 + (completed - 2) * 4);
+      $("readiness").textContent = `${readiness}%`;
+      $("readinessBar").style.width = `${readiness}%`;
+      $("readinessBar").parentElement.setAttribute("aria-label", `Interview readiness ${readiness} percent`);
+
+      responseSection.style.display = "none";
+      results.classList.add("show");
+      results.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      return { overall, clarity, structure, fillerWords: fillers.length, wordCount: words.length, track: state.track };
+    }
+
+    function resetAnswer(focus = true) {
+      stopListening();
+      answer.value = "";
+      analyseButton.disabled = true;
+      results.classList.remove("show");
+      responseSection.style.display = "block";
+      state.seconds = 0;
+      $("timer").textContent = "00:00 / 02:00";
+      if (focus) setTimeout(() => answer.focus(), 50);
+    }
+
+    function chooseTrack(key) {
+      state.track = key;
+      document.querySelectorAll(".track").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.track === key)));
+      const scenario = scenarios[key];
+      $("trackName").textContent = `${scenario.name} · Question 1 of 5`;
+      $("promptText").textContent = scenario.prompt;
+      $("promptHint").textContent = scenario.hint;
+      $("betterAnswer").textContent = scenario.better;
+      resetAnswer(false);
+    }
+
+    document.querySelectorAll(".track").forEach(button => button.addEventListener("click", () => chooseTrack(button.dataset.track)));
+    answer.addEventListener("input", () => { analyseButton.disabled = answer.value.trim().length < 20; });
+    micButton.addEventListener("click", startListening);
+    analyseButton.addEventListener("click", analyse);
+    $("demoButton").addEventListener("click", () => { answer.value = sample; analyseButton.disabled = false; analyse(); });
+    $("retryButton").addEventListener("click", () => resetAnswer(true));
+    $("newPromptButton").addEventListener("click", () => { resetAnswer(false); $("trackList").scrollIntoView({ behavior: "smooth", block: "center" }); });
+
+    const savedCompleted = Number(localStorage.getItem("careerspeak-completed") || 2);
+    $("completedCount").textContent = Math.min(savedCompleted, 5);
+
+    function registerAgentTools() {
+      const context = document.modelContext;
+      if (!context?.registerTool) return;
+      const validTracks = Object.keys(scenarios);
+      const reportError = error => console.warn("CareerSpeak agent tool could not be registered", error);
+
+      Promise.resolve(context.registerTool({
+        name: "start_career_practice",
+        title: "Start career practice",
+        description: "Open one CareerSpeak practice track and display its speaking prompt.",
+        inputSchema: {
+          type: "object",
+          properties: { track: { type: "string", enum: validTracks } },
+          required: ["track"],
+          additionalProperties: false
+        },
+        annotations: { readOnlyHint: false, untrustedContentHint: false },
+        execute(input) {
+          if (!input || !validTracks.includes(input.track)) throw new Error("Choose a valid practice track.");
+          chooseTrack(input.track);
+          return { track: input.track, prompt: scenarios[input.track].prompt, status: "ready" };
+        }
+      })).catch(reportError);
+
+      Promise.resolve(context.registerTool({
+        name: "submit_practice_answer",
+        title: "Submit practice answer",
+        description: "Submit a written practice answer, update the visible feedback, and return the score summary.",
+        inputSchema: {
+          type: "object",
+          properties: { answer: { type: "string", minLength: 20, maxLength: 2000 } },
+          required: ["answer"],
+          additionalProperties: false
+        },
+        annotations: { readOnlyHint: false, untrustedContentHint: true },
+        execute(input) {
+          if (!input || typeof input.answer !== "string" || input.answer.trim().length < 20) {
+            throw new Error("The answer must contain at least 20 characters.");
+          }
+          answer.value = input.answer.trim().slice(0, 2000);
+          analyseButton.disabled = false;
+          return analyse();
+        }
+      })).catch(reportError);
+    }
+
+    registerAgentTools();
+  </script>
+</body>
+</html>
