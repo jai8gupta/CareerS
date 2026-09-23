@@ -1,0 +1,2 @@
+import { Footer } from "@/components/footer";import { SiteHeader } from "@/components/site-header";
+export function LegalLayout({title,children}:{title:string;children:React.ReactNode}){return <><SiteHeader/><main className="pageMain"><article className="container legalPage"><p className="eyebrow">CareerSpeak</p><h1>{title}</h1><p className="updated">Last updated: 24 September 2026</p>{children}</article></main><Footer/></>}
