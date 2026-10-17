@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyHmac } from "@/lib/razorpay";
+import { isPlanId, PLANS } from "@/lib/plans";
 
 export const runtime="nodejs";
 type Entity={id?:string;status?:string;order_id?:string;current_start?:number;current_end?:number;notes?:{user_id?:string;plan_id?:string}};
@@ -15,9 +16,15 @@ export async function POST(request:Request){
     const statusMap:Record<string,string>={authenticated:"authenticated",active:"active",charged:"active",completed:"completed",cancelled:"cancelled",paused:"paused",halted:"halted"};const eventStatus=(payload.event||"").split(".")[1];const status=statusMap[eventStatus]||subscription.status||"pending";
     await admin.from("subscriptions").upsert({user_id:subscription.notes.user_id,plan_id:subscription.notes.plan_id||"monthly",status,provider_subscription_id:subscription.id,current_period_start:subscription.current_start?new Date(subscription.current_start*1000).toISOString():null,current_period_end:subscription.current_end?new Date(subscription.current_end*1000).toISOString():null,updated_at:new Date().toISOString()},{onConflict:"user_id"});
   }
-  if(order?.id&&order.notes?.user_id){
-    await admin.from("payment_attempts").update({status:"captured",provider_payment_id:payment?.id||null,verified_at:new Date().toISOString()}).eq("user_id",order.notes.user_id).eq("provider_reference",order.id);
-    if(order.notes.plan_id==="sprint")await admin.from("subscriptions").upsert({user_id:order.notes.user_id,plan_id:"sprint",status:"active",provider_subscription_id:null,current_period_start:new Date().toISOString(),current_period_end:new Date(Date.now()+7*86400000).toISOString(),updated_at:new Date().toISOString()},{onConflict:"user_id"});
+  const orderReference=order?.id||payment?.order_id;
+  if(orderReference){
+    const{data:attempt}=await admin.from("payment_attempts").select("user_id,plan_id").eq("provider_reference",orderReference).maybeSingle();
+    const userId=order?.notes?.user_id||attempt?.user_id;const planId=order?.notes?.plan_id||attempt?.plan_id;
+    await admin.from("payment_attempts").update({status:"captured",provider_payment_id:payment?.id||null,verified_at:new Date().toISOString()}).eq("provider_reference",orderReference);
+    if(userId&&isPlanId(planId)){
+      const now=new Date();const end=new Date(now.getTime()+PLANS[planId].durationDays*86400000);
+      await admin.from("subscriptions").upsert({user_id:userId,plan_id:planId,status:"active",provider_subscription_id:null,current_period_start:now.toISOString(),current_period_end:end.toISOString(),updated_at:now.toISOString()},{onConflict:"user_id"});
+    }
   }
   return NextResponse.json({ok:true});
 }

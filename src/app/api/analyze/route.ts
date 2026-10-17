@@ -29,7 +29,8 @@ export async function POST(request: Request) {
     if (process.env.OPENAI_API_KEY) {
       const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
       const response = await client.responses.parse({
-        model: process.env.OPENAI_FEEDBACK_MODEL || "gpt-4o-mini",
+        model: process.env.OPENAI_FEEDBACK_MODEL || "gpt-6-luna",
+        reasoning: { effort: "none" },
         input: [
           { role: "system", content: "You are a precise, encouraging career communication coach for Indian students and early-career professionals. Judge the answer, not the speaker's accent. Do not penalise Indian English when it is clear. Be specific, brief, and practical. The stronger answer must preserve the user's facts and must never invent employers, numbers, achievements, or qualifications. Explain one improvement in friendly Hinglish using Roman script." },
           { role: "user", content: `Career scenario: ${scenario.track}\nPrompt: ${scenario.title}\nUser answer: ${answer}` },

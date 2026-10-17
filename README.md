@@ -14,8 +14,8 @@ Production-oriented Next.js application for practising interviews and workplace 
 
 1. Copy `.env.example` to `.env.local` and add development credentials.
 2. Create a Supabase project and run `supabase/migrations/001_initial.sql` in its SQL editor.
-3. Create the monthly and annual plans in Razorpay Test Mode and copy their plan IDs into `.env.local`.
-4. Configure a Razorpay webhook at `/api/billing/webhook` for subscription and payment events.
+3. Keep `RAZORPAY_SUBSCRIPTIONS_ENABLED=false` while only ordinary payments are approved. All three paid plans will use one-time Orders.
+4. Configure a Razorpay webhook at `/api/billing/webhook` for payment events. After Subscriptions approval, create monthly and annual plans, add their IDs, and set `RAZORPAY_SUBSCRIPTIONS_ENABLED=true`.
 5. Install and run:
 
 ```sh
@@ -40,8 +40,8 @@ Open `http://localhost:3000`. Without Supabase credentials the public pages stil
 ## Pricing strategy
 
 - Free: 3 complete AI reviews per calendar month
-- Interview Sprint: ₹149 once, 30 reviews for 7 days
-- Pro Monthly: ₹299/month, 60 reviews per month
-- Pro Annual: ₹1,599/year, 720 reviews per year (best value and cash-flow plan)
+- Interview Sprint: ₹39 once, 10 reviews for 7 days
+- Pro Monthly: ₹79 for 30 days, 25 reviews
+- Pro Annual: ₹599 for 365 days, 25 reviews per calendar month
 
-The one-week Sprint captures urgent interview intent without forcing a subscription. Annual is the primary offer; Monthly reduces commitment anxiety. Usage limits protect voice-inference margins.
+The one-week Sprint captures urgent interview intent without forcing a subscription. Until Razorpay Subscriptions is approved, Monthly and Annual are one-time passes with manual renewal. Usage limits protect voice-inference margins.

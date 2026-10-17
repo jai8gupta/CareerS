@@ -14,11 +14,13 @@ export async function POST(request:Request){
   const plan=PLANS[parsed.data.planId];
   try{
     let referenceId:string;let type:"order"|"subscription";
-    if(plan.kind==="order"){
-      const order=await razorpayRequest<{id:string}>("/orders",{method:"POST",body:JSON.stringify({amount:plan.price*100,currency:"INR",receipt:`sprint_${user.id.slice(0,8)}_${Date.now()}`,notes:{user_id:user.id,plan_id:plan.id}})});referenceId=order.id;type="order";
+    const subscriptionsEnabled=process.env.RAZORPAY_SUBSCRIPTIONS_ENABLED==="true";
+    const providerPlanId=plan.id==="monthly"?process.env.RAZORPAY_MONTHLY_PLAN_ID:plan.id==="annual"?process.env.RAZORPAY_ANNUAL_PLAN_ID:undefined;
+    if(plan.kind==="order"||!subscriptionsEnabled){
+      const order=await razorpayRequest<{id:string}>("/orders",{method:"POST",body:JSON.stringify({amount:plan.price*100,currency:"INR",receipt:`${plan.id}_${user.id.slice(0,8)}_${Date.now()}`,notes:{user_id:user.id,plan_id:plan.id}})});referenceId=order.id;type="order";
     }else{
-      const planId=plan.id==="monthly"?process.env.RAZORPAY_MONTHLY_PLAN_ID:process.env.RAZORPAY_ANNUAL_PLAN_ID;if(!planId)throw new Error("This subscription plan is not configured yet.");
-      const subscription=await razorpayRequest<{id:string}>("/subscriptions",{method:"POST",body:JSON.stringify({plan_id:planId,total_count:plan.id==="monthly"?12:5,quantity:1,customer_notify:1,notes:{user_id:user.id,plan_id:plan.id}})});referenceId=subscription.id;type="subscription";
+      if(!providerPlanId)throw new Error("This subscription plan is not configured yet.");
+      const subscription=await razorpayRequest<{id:string}>("/subscriptions",{method:"POST",body:JSON.stringify({plan_id:providerPlanId,total_count:plan.id==="monthly"?12:5,quantity:1,customer_notify:1,notes:{user_id:user.id,plan_id:plan.id}})});referenceId=subscription.id;type="subscription";
     }
     const supabase=createAdminClient();await supabase.from("payment_attempts").insert({user_id:user.id,plan_id:plan.id,provider_reference:referenceId,kind:type,status:"created",amount_paise:plan.price*100});
     return NextResponse.json({key:process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,referenceId,type,amount:plan.price*100},{headers:{"Cache-Control":"no-store"}});

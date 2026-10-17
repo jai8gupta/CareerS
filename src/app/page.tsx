@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 export const dynamic = "force-dynamic";
 
 export default function HomePage() {
+  const subscriptionsEnabled = process.env.RAZORPAY_SUBSCRIPTIONS_ENABLED === "true";
   return (
     <>
       <SiteHeader />
@@ -53,7 +54,7 @@ export default function HomePage() {
         <section className="section pricingSection" id="pricing">
           <div className="container">
             <div className="sectionHeading"><p className="eyebrow">Start for the outcome you need</p><h2>Fair Indian pricing. No giant commitment.</h2><p>Use the emergency interview plan, or turn better communication into a habit.</p></div>
-            <PricingCards />
+            <PricingCards subscriptionsEnabled={subscriptionsEnabled} />
           </div>
         </section>
 

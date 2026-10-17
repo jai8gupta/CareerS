@@ -112,10 +112,13 @@ begin
   if found then
     v_plan := v_subscription.plan_id;
     if v_plan = 'sprint' then
-      v_limit := 30;
+      v_limit := 10;
+      v_start := coalesce(v_subscription.current_period_start, v_subscription.created_at);
+    elsif v_plan = 'monthly' then
+      v_limit := 25;
       v_start := coalesce(v_subscription.current_period_start, v_subscription.created_at);
     else
-      v_limit := 60;
+      v_limit := 25;
       v_start := greatest(coalesce(v_subscription.current_period_start, date_trunc('month', now())), date_trunc('month', now()));
     end if;
   end if;
