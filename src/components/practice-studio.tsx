@@ -7,6 +7,20 @@ import { SCENARIOS, type ScenarioId } from "@/lib/scenarios";
 type Feedback = { overall:number; clarity:number; structure:number; relevance:number; fillers:number; headline:string; summary:string; worked:string; improve:string; betterAnswer:string };
 const scenarioIds = Object.keys(SCENARIOS) as ScenarioId[];
 const icons = { hr_intro:Users, technical_story:Code2, delayed_update:BriefcaseBusiness, unhappy_client:MessageSquareText, presentation_open:Presentation };
+const recorderMimeTypes = ["audio/webm;codecs=opus", "audio/mp4", "audio/webm", "audio/ogg;codecs=opus"];
+
+function preferredRecorderMimeType() {
+  return recorderMimeTypes.find(type => MediaRecorder.isTypeSupported(type));
+}
+
+function extensionForMimeType(mimeType:string) {
+  const type=mimeType.split(";",1)[0].toLowerCase();
+  if(type==="audio/mp4"||type==="audio/x-m4a")return "m4a";
+  if(type==="audio/mpeg")return "mp3";
+  if(type==="audio/wav"||type==="audio/x-wav")return "wav";
+  if(type==="audio/ogg")return "ogg";
+  return "webm";
+}
 
 export function PracticeStudio({remaining}:{remaining:number}) {
   const [scenarioId,setScenarioId]=useState<ScenarioId>("hr_intro");
@@ -27,15 +41,16 @@ export function PracticeStudio({remaining}:{remaining:number}) {
   async function startRecording(){
     try{
       const media=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
-      stream.current=media;chunks.current=[];const mr=new MediaRecorder(media);recorder.current=mr;
+      const mimeType=preferredRecorderMimeType();
+      stream.current=media;chunks.current=[];const mr=mimeType?new MediaRecorder(media,{mimeType}):new MediaRecorder(media);recorder.current=mr;
       mr.ondataavailable=e=>{if(e.data.size)chunks.current.push(e.data)};
-      mr.onstop=()=>void uploadAudio(new Blob(chunks.current,{type:mr.mimeType||"audio/webm"}));
+      mr.onstop=()=>{const recordedType=mr.mimeType||chunks.current.find(chunk=>chunk.type)?.type||"audio/webm";void uploadAudio(new Blob(chunks.current,{type:recordedType}),extensionForMimeType(recordedType))};
       mr.start();setSeconds(0);setRecording(true);setStatus("Listening… speak naturally. Short pauses are okay.");
     }catch{setStatus("Microphone access was unavailable. You can type your answer instead.")}
   }
   function stopRecording(){recorder.current?.stop();stream.current?.getTracks().forEach(track=>track.stop());setRecording(false);setStatus("Transcribing your answer…")}
-  async function uploadAudio(blob:Blob){
-    setBusy(true);try{const form=new FormData();form.append("audio",blob,"answer.webm");const res=await fetch("/api/transcribe",{method:"POST",body:form});const data=await res.json();if(!res.ok)throw new Error(data.error||"Transcription failed");setAnswer(data.transcript);setStatus("Transcript ready. Edit anything we misheard, then get feedback.")}catch(error){setStatus(error instanceof Error?error.message:"Could not transcribe that recording.")}finally{setBusy(false)}
+  async function uploadAudio(blob:Blob,extension:string){
+    setBusy(true);try{const form=new FormData();form.append("audio",blob,`answer.${extension}`);const res=await fetch("/api/transcribe",{method:"POST",body:form});const data=await res.json();if(!res.ok)throw new Error(data.error||"Transcription failed");setAnswer(data.transcript);setStatus("Transcript ready. Edit anything we misheard, then get feedback.")}catch(error){setStatus(error instanceof Error?error.message:"Could not transcribe that recording.")}finally{setBusy(false)}
   }
   async function analyse(){
     if(answer.trim().length<20)return;setBusy(true);setStatus("Reviewing clarity, structure, and relevance…");

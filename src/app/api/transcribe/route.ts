@@ -5,7 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
-const allowedTypes = new Set(["audio/webm","audio/mp4","audio/mpeg","audio/wav","audio/ogg","audio/x-m4a"]);
+const allowedTypes = new Set(["audio/webm","video/webm","audio/mp4","audio/mpeg","audio/wav","audio/x-wav","audio/ogg","audio/x-m4a","audio/flac"]);
+const extensionByType:Record<string,string>={"audio/webm":"webm","video/webm":"webm","audio/mp4":"m4a","audio/x-m4a":"m4a","audio/mpeg":"mp3","audio/wav":"wav","audio/x-wav":"wav","audio/ogg":"ogg","audio/flac":"flac"};
 
 export async function POST(request: Request) {
   const user = await getUser();
@@ -14,14 +15,19 @@ export async function POST(request: Request) {
   const audio = form.get("audio");
   if (!(audio instanceof File)) return NextResponse.json({ error: "No audio file received." }, { status: 400 });
   if (audio.size < 100 || audio.size > 10 * 1024 * 1024) return NextResponse.json({ error: "Record between a few seconds and two minutes." }, { status: 413 });
-  if (audio.type && !allowedTypes.has(audio.type)) return NextResponse.json({ error: "Unsupported audio format." }, { status: 415 });
+  const receivedType=audio.type.split(";",1)[0].trim().toLowerCase();
+  if (receivedType && !allowedTypes.has(receivedType)) return NextResponse.json({ error: "Unsupported audio format." }, { status: 415 });
   if (!process.env.OPENAI_API_KEY) return NextResponse.json({ error: "Voice transcription is not configured yet. Type your answer for now." }, { status: 503 });
   const supabase = await createClient();
   const { error: rateError } = await supabase.rpc("reserve_transcription");
   if (rateError) return NextResponse.json({ error: rateError.message.includes("rate_limited") ? "Too many recordings in a short time. Please wait and try again." : "Could not start transcription." }, { status: rateError.message.includes("rate_limited") ? 429 : 500 });
   try {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const file = await toFile(Buffer.from(await audio.arrayBuffer()), audio.name || "answer.webm", { type: audio.type || "audio/webm" });
+    const normalizedType=receivedType==="video/webm"?"audio/webm":receivedType||"audio/webm";
+    const extension=extensionByType[receivedType]||"webm";
+    const suppliedName=audio.name.trim();
+    const fileName=/\.(flac|mp3|mp4|mpeg|mpga|m4a|ogg|wav|webm)$/i.test(suppliedName)?suppliedName:`answer.${extension}`;
+    const file = await toFile(Buffer.from(await audio.arrayBuffer()), fileName, { type: normalizedType });
     const result = await client.audio.transcriptions.create({
       file,
       model: process.env.OPENAI_TRANSCRIPTION_MODEL || "gpt-transcribe",
