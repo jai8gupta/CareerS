@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { getUser } from "@/lib/auth";
 
-export async function SiteHeader() {
-  const user = await getUser();
+export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
   return (
     <header className="siteHeader">
       <div className="container headerInner">
         <Logo />
         <nav className="mainNav" aria-label="Main navigation">
+          <Link href="/ai-interview-practice">Interviews</Link>
+          <Link href="/workplace-english-practice">Workplace English</Link>
           <Link href="/pricing">Pricing</Link>
-          {user ? (
+          {signedIn ? (
             <Link className="button buttonDark buttonSmall" href="/dashboard">Open practice</Link>
           ) : (
             <>

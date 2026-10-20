@@ -5,7 +5,7 @@ import { requireUser } from "@/lib/auth";
 import { isPlanId, PLANS } from "@/lib/plans";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = { title: "Practice" };
+export const metadata: Metadata = { title: "Practice", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {

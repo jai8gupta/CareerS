@@ -1,21 +1,80 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BarChart3, BriefcaseBusiness, Mic2, RefreshCw, Sparkles } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { PricingCards } from "@/components/pricing-cards";
 import { SiteHeader } from "@/components/site-header";
+import { jsonLd, publicPageMetadata, SITE_URL } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = publicPageMetadata({
+  title: "CareerSpeak — AI Interview & Career English Practice for India",
+  description: "Practise job interviews, presentations, client calls and workplace English with instant AI feedback. Start with 3 free CareerSpeak reviews.",
+  path: "/",
+});
+
+const faqItems = [
+  { question: "What does CareerSpeak help me practise?", answer: "CareerSpeak helps you rehearse HR interviews, technical explanations, daily stand-ups, client conversations and presentations in your own voice." },
+  { question: "Do I need fluent English to begin?", answer: "No. CareerSpeak is designed for professionals improving clarity and confidence. You can speak naturally, including the occasional Hindi phrase, and focus on making each answer stronger." },
+  { question: "How does the AI feedback work?", answer: "After you speak or type an answer, CareerSpeak reviews its clarity, structure and relevance, highlights what worked and suggests a stronger version to retry." },
+  { question: "Can I try CareerSpeak for free?", answer: "Yes. Every account includes 3 complete AI reviews each month with no card required." },
+] as const;
 
 export default function HomePage() {
   const subscriptionsEnabled = process.env.RAZORPAY_SUBSCRIPTIONS_ENABLED === "true";
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: "CareerSpeak",
+        url: `${SITE_URL}/`,
+        logo: `${SITE_URL}/favicon.svg`,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        name: "CareerSpeak",
+        url: `${SITE_URL}/`,
+        inLanguage: "en-IN",
+        publisher: { "@id": `${SITE_URL}/#organization` },
+      },
+      {
+        "@type": "WebApplication",
+        "@id": `${SITE_URL}/#app`,
+        name: "CareerSpeak",
+        url: `${SITE_URL}/`,
+        applicationCategory: "EducationalApplication",
+        operatingSystem: "Web",
+        inLanguage: "en-IN",
+        description: "AI-powered interview and workplace English practice for Indian professionals.",
+        provider: { "@id": `${SITE_URL}/#organization` },
+        offers: [
+          { "@type": "Offer", name: "Free", price: "0", priceCurrency: "INR" },
+          { "@type": "Offer", name: "Interview Sprint", price: "39", priceCurrency: "INR" },
+          { "@type": "Offer", name: "Pro Monthly", price: "79", priceCurrency: "INR" },
+          { "@type": "Offer", name: "Pro Annual", price: "599", priceCurrency: "INR" },
+        ],
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: faqItems.map(({ question, answer }) => ({
+          "@type": "Question",
+          name: question,
+          acceptedAnswer: { "@type": "Answer", text: answer },
+        })),
+      },
+    ],
+  };
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <SiteHeader />
       <main>
         <section className="hero container">
           <div className="heroCopy">
-            <p className="eyebrow">Five-minute career rehearsal</p>
-            <h1>Sound ready when it matters.</h1>
+            <p className="eyebrow">AI career-English practice</p>
+            <h1>Practise career English. Sound ready.</h1>
             <p className="heroLead">Practise tomorrow’s interview, stand-up, client call, or presentation. Speak naturally, see exactly what weakened your answer, and retry with confidence.</p>
             <div className="heroActions">
               <Link className="button buttonLime" href="/signup">Take a free interview test <ArrowRight size={18} /></Link>
@@ -51,11 +110,21 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="container intentLinks" aria-label="Explore CareerSpeak practice">
+          <Link href="/ai-interview-practice"><span>For your next interview</span><strong>Explore AI interview practice</strong><ArrowRight size={18}/></Link>
+          <Link href="/workplace-english-practice"><span>For everyday career growth</span><strong>Explore workplace English practice</strong><ArrowRight size={18}/></Link>
+        </section>
+
         <section className="section pricingSection" id="pricing">
           <div className="container">
             <div className="sectionHeading"><p className="eyebrow">Start for the outcome you need</p><h2>Fair Indian pricing. No giant commitment.</h2><p>Use the emergency interview plan, or turn better communication into a habit.</p></div>
             <PricingCards subscriptionsEnabled={subscriptionsEnabled} />
           </div>
+        </section>
+
+        <section className="section container faqSection" aria-labelledby="faq-title">
+          <div className="sectionHeading narrow"><p className="eyebrow">Questions, answered</p><h2 id="faq-title">Practise first. Perform with confidence.</h2><p>Everything you need to know before your first CareerSpeak rehearsal.</p></div>
+          <div className="faqGrid">{faqItems.map(({ question, answer }) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</div>
         </section>
 
         <section className="container finalCta">

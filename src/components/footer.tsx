@@ -7,6 +7,9 @@ export function Footer() {
       <div className="container footerInner">
         <Logo />
         <div className="footerLinks">
+          <Link href="/ai-interview-practice">Interview practice</Link>
+          <Link href="/workplace-english-practice">Workplace English</Link>
+          <Link href="/about">About</Link>
           <Link href="/privacy">Privacy</Link>
           <Link href="/terms">Terms</Link>
           <Link href="/refunds">Refunds</Link>
