@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { trackFunnel } from "@/lib/analytics";
 import { isPlanId, PLANS, type PlanId } from "@/lib/plans";
 
 declare global {
@@ -28,13 +29,14 @@ export function CheckoutLauncher({ email, name }: { email?: string; name?: strin
       await loadCheckout();
       const response=await fetch("/api/billing/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({planId})});
       const checkout=await response.json();if(!response.ok)throw new Error(checkout.error||"Could not start checkout.");
+      trackFunnel("checkout_started",{plan:planId,kind:checkout.type},{once:`checkout_started:${checkout.referenceId}`});
       if(!window.Razorpay)throw new Error("Secure checkout did not load.");
       const plan=PLANS[planId];
       const options:Record<string,unknown>={key:checkout.key,name:"CareerSpeak",description:plan.name,currency:"INR",prefill:{name,email},theme:{color:"#101828"},modal:{ondismiss:()=>{setBusy(false);setMessage("");router.replace("/pricing")}},handler:async(result:Record<string,string>)=>{
         try{setMessage("Verifying payment…");
           const verified=await fetch("/api/billing/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...result,planId,referenceId:checkout.referenceId,type:checkout.type})});
           if(!verified.ok){const body=await verified.json();throw new Error(body.error||"Payment verification failed.")}
-          router.push("/dashboard?payment=success");router.refresh();
+          trackFunnel("purchase_verified",{plan:planId,kind:checkout.type},{once:`purchase_verified:${checkout.referenceId}`});router.push("/dashboard?payment=success");router.refresh();
         }catch(error){setBusy(false);setMessage(error instanceof Error?error.message:"Payment verification failed. Contact support with your payment ID.")}
       }};
       if(checkout.type==="subscription")options.subscription_id=checkout.referenceId;else{options.order_id=checkout.referenceId;options.amount=checkout.amount}

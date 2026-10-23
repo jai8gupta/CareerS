@@ -23,7 +23,7 @@ export async function updateSession(request: NextRequest) {
   if (protectedPath && !data?.claims) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
-    loginUrl.searchParams.set("next", request.nextUrl.pathname);
+    loginUrl.searchParams.set("next", `${request.nextUrl.pathname}${request.nextUrl.search}`);
     return NextResponse.redirect(loginUrl);
   }
   response.headers.set("Cache-Control", "private, no-store");

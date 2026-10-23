@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrackedLink } from "@/components/analytics-events";
 import { Logo } from "@/components/logo";
 
 export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
@@ -15,7 +16,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
           ) : (
             <>
               <Link href="/login">Sign in</Link>
-              <Link className="button buttonDark buttonSmall" href="/signup">Start free</Link>
+              <TrackedLink className="button buttonDark buttonSmall" href="/practice-preview?scenario=hr_intro" event="primary_cta_clicked" properties={{ placement: "header", destination: "practice_preview" }}>Start free</TrackedLink>
             </>
           )}
         </nav>

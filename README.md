@@ -30,7 +30,8 @@ Open `http://localhost:3000`. Without Supabase credentials the public pages stil
 - Use separate Supabase and Razorpay projects/keys for preview and production.
 - Set all variables from `.env.example` in the deployment provider; never expose secret keys as `NEXT_PUBLIC_*`.
 - Configure Supabase Site URL and redirect URLs for the production domain.
-- Enable email confirmation and configure a branded transactional-email provider in Supabase.
+- Enable email confirmation, configure a branded transactional-email provider, and apply the browser-independent templates in [`docs/supabase-auth-email-templates.md`](docs/supabase-auth-email-templates.md).
+- Review the funnel event contract in [`docs/analytics-events.md`](docs/analytics-events.md) and enable Vercel Web Analytics before evaluating conversion.
 - Add the public HTTPS webhook URL in Razorpay and subscribe to `payment.captured`, `subscription.authenticated`, `subscription.activated`, `subscription.charged`, `subscription.completed`, `subscription.cancelled`, `subscription.paused`, and `subscription.halted`.
 - Complete Razorpay individual/freelancer KYC and switch from Test Mode to Live Mode.
 - Replace placeholder support and legal contact details before accepting payments.

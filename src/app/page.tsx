@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, BarChart3, BriefcaseBusiness, Mic2, RefreshCw, Sparkles } from "lucide-react";
+import { FunnelPageEvent, TrackedLink } from "@/components/analytics-events";
 import { Footer } from "@/components/footer";
 import { PricingCards } from "@/components/pricing-cards";
 import { SiteHeader } from "@/components/site-header";
@@ -8,7 +9,7 @@ import { jsonLd, publicPageMetadata, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = publicPageMetadata({
   title: "CareerSpeak — AI Interview & Career English Practice for India",
-  description: "Practise job interviews, presentations, client calls and workplace English with instant AI feedback. Start with 3 free CareerSpeak reviews.",
+  description: "Practise real interview questions aloud, get AI feedback on clarity, structure and relevance, then retry. Start with 3 free CareerSpeak reviews.",
   path: "/",
 });
 
@@ -69,24 +70,25 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
+      <FunnelPageEvent event="landing_viewed" properties={{ page: "home" }} once="home" />
       <SiteHeader />
       <main>
         <section className="hero container">
           <div className="heroCopy">
-            <p className="eyebrow">AI career-English practice</p>
-            <h1>Practise career English. Sound ready.</h1>
-            <p className="heroLead">Practise tomorrow’s interview, stand-up, client call, or presentation. Speak naturally, see exactly what weakened your answer, and retry with confidence.</p>
+            <p className="eyebrow">AI interview practice for Indian careers</p>
+            <h1>Know the answer. Struggle to say it?</h1>
+            <p className="heroLead">Practise real interview questions aloud. Get feedback on clarity, structure and relevance, then try again in your own voice.</p>
             <div className="heroActions">
-              <Link className="button buttonLime" href="/signup">Take a free interview test <ArrowRight size={18} /></Link>
-              <Link className="textLink" href="/pricing">See simple pricing</Link>
+              <TrackedLink className="button buttonLime" href="/practice-preview?scenario=hr_intro" event="primary_cta_clicked" properties={{ placement: "hero", destination: "practice_preview" }}>Practise your first answer free <ArrowRight size={18} /></TrackedLink>
+              <Link className="textLink" href="#how-it-works">See how it works</Link>
             </div>
-            <div className="trustRow"><span>No card required</span><span>3 free AI reviews</span><span>Built for Indian careers</span></div>
+            <div className="trustRow"><span>3 free AI reviews every month</span><span>No card required</span><span>Built for Indian careers</span></div>
           </div>
           <div className="heroDemo" aria-label="CareerSpeak feedback preview">
-            <div className="demoTop"><span>HR interview · Warm-up</span><span className="livePill">Practice</span></div>
+            <div className="demoTop"><span>HR interview · Warm-up</span><span className="livePill">Illustrative preview</span></div>
             <div className="demoPrompt"><small>Your prompt</small><h2>Tell me about yourself and why you’re interested in this role.</h2></div>
             <div className="waveRow"><span className="micCircle"><Mic2 size={22} /></span><div className="wave" aria-hidden="true">{[12,24,34,18,42,28,14,38,48,22,32,16,40,25,12,30].map((height, index) => <i style={{ height }} key={index} />)}</div><span>01:08</span></div>
-            <div className="scorePreview"><div><strong>82</strong><span>Overall</span></div><p><b>Strong structure.</b> Add one measurable result to make your answer memorable.</p></div>
+            <div className="scorePreview"><div><strong>3</strong><span>review areas</span></div><p><b>Example feedback:</b> Strong structure. Add one measurable result to make your answer memorable.</p></div>
           </div>
         </section>
 
@@ -99,15 +101,21 @@ export default function HomePage() {
           </div>
         </section>
 
+        <section className="section container howSection" id="how-it-works" aria-labelledby="how-title">
+          <div className="sectionHeading narrow"><p className="eyebrow">How CareerSpeak works</p><h2 id="how-title">Speak → Get feedback → Improve → Retry</h2><p>A short, focused rehearsal for the exact career moment ahead of you.</p></div>
+          <div className="howGrid">
+            {[
+              ["01", "Choose a real career question", "Start with an HR interview, technical explanation, manager update, client conversation, or presentation."],
+              ["02", "Say your answer aloud", "Speak naturally for 30–120 seconds. You can type instead if your browser cannot use the microphone."],
+              ["03", "Review what can improve", "See focused feedback on clarity, structure, relevance, fillers, and one stronger version."],
+              ["04", "Try again in your words", "Apply one useful change immediately while the prompt and feedback are still fresh."],
+            ].map(([number, title, copy]) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}
+          </div>
+        </section>
+
         <section className="section container splitSection">
-          <div>
-            <p className="eyebrow">Not another English course</p>
-            <h2>Rehearse the exact moment ahead of you.</h2>
-            <p className="sectionLead">CareerSpeak focuses on professional outcomes: clearer stories, stronger structure, fewer fillers, and answers people remember.</p>
-          </div>
-          <div className="trackPreview">
-            {["HR interviews", "Technical explanations", "Daily stand-ups", "Client conversations", "Presentations"].map((track, index) => <div key={track}><span>{String(index + 1).padStart(2, "0")}</span><BriefcaseBusiness size={19} /><b>{track}</b></div>)}
-          </div>
+          <div><p className="eyebrow">Not another English course</p><h2>Rehearse the exact moment ahead of you.</h2><p className="sectionLead">CareerSpeak focuses on professional outcomes: clearer stories, stronger structure, fewer fillers, and answers people remember.</p></div>
+          <div className="trackPreview">{["HR interviews", "Technical explanations", "Daily stand-ups", "Client conversations", "Presentations"].map((track, index) => <div key={track}><span>{String(index + 1).padStart(2, "0")}</span><BriefcaseBusiness size={19} /><b>{track}</b></div>)}</div>
         </section>
 
         <section className="container intentLinks" aria-label="Explore CareerSpeak practice">
@@ -129,7 +137,7 @@ export default function HomePage() {
 
         <section className="container finalCta">
           <div><p className="eyebrow">Your next career moment</p><h2>Don’t practise in your head.</h2><p>Say the answer. Improve it. Walk in ready.</p></div>
-          <Link className="button buttonLime" href="/signup">Start with 3 free reviews <ArrowRight size={18} /></Link>
+          <TrackedLink className="button buttonLime" href="/practice-preview?scenario=hr_intro" event="primary_cta_clicked" properties={{ placement: "final", destination: "practice_preview" }}>Practise your first answer free <ArrowRight size={18} /></TrackedLink>
         </section>
       </main>
       <Footer />

@@ -1,0 +1,18 @@
+import type { Metadata } from "next";
+import { Footer } from "@/components/footer";
+import { PracticePreview } from "@/components/practice-preview";
+import { SiteHeader } from "@/components/site-header";
+import { isScenarioId } from "@/lib/scenarios";
+import { publicPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = publicPageMetadata({
+  title: "Preview Your First Interview Practice",
+  description: "Choose a real interview or workplace question, see how CareerSpeak reviews your answer, and start with 3 free AI reviews.",
+  path: "/practice-preview",
+});
+
+export default async function PracticePreviewPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const params = await searchParams;
+  const initialScenario = isScenarioId(params.scenario) ? params.scenario : "hr_intro";
+  return <><SiteHeader/><main><PracticePreview initialScenario={initialScenario}/></main><Footer/></>;
+}

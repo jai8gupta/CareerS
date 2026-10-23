@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Analytics } from '@vercel/analytics/next';
+import { AnalyticsBootstrap } from "@/components/analytics-events";
 import { NavigationProgress } from "@/components/navigation-progress";
 
 import "./globals.css";
@@ -52,7 +53,7 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body><Suspense fallback={null}><NavigationProgress /></Suspense>{children}</body>
+      <body><Suspense fallback={null}><AnalyticsBootstrap/><NavigationProgress /></Suspense>{children}</body>
       {process.env.VERCEL && <Analytics />}
     </html>
   );
