@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, MessageSquareText } from "lucide-react";
+import { TrackedLink } from "@/components/analytics-events";
 import { Footer } from "@/components/footer";
 import { SiteHeader } from "@/components/site-header";
+import { practicePreviewHref } from "@/lib/navigation";
+import type { ScenarioId } from "@/lib/scenarios";
 import { jsonLd, SITE_URL } from "@/lib/seo";
 
 type Item = { title: string; copy: string };
@@ -23,6 +26,7 @@ export function UseCasePage({
   faq,
   relatedHref,
   relatedLabel,
+  previewScenario,
 }: {
   path: string;
   eyebrow: string;
@@ -39,7 +43,9 @@ export function UseCasePage({
   faq: FAQ[];
   relatedHref: string;
   relatedLabel: string;
+  previewScenario: ScenarioId;
 }) {
+  const previewHref = practicePreviewHref(previewScenario);
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -66,7 +72,7 @@ export function UseCasePage({
           <p className="eyebrow">{eyebrow}</p>
           <h1>{title}</h1>
           <p className="useCaseLead">{lead}</p>
-          <div className="heroActions"><Link className="button buttonLime" href="/signup">Practise free <ArrowRight size={18}/></Link><Link className="textLink" href="/pricing">See pricing</Link></div>
+          <div className="heroActions"><TrackedLink className="button buttonLime" href={previewHref} event="primary_cta_clicked" properties={{ placement: "use_case_hero", destination: "practice_preview" }}>Practise free <ArrowRight size={18}/></TrackedLink><Link className="textLink" href="/pricing">See pricing</Link></div>
           <ul className="inlineChecks">{highlights.map(item=><li key={item}><CheckCircle2 size={17}/>{item}</li>)}</ul>
         </div>
         <div className="promptStack" aria-label="Example CareerSpeak prompts">{scenarios.slice(0,3).map((scenario,index)=><article key={scenario.title}><span><MessageSquareText size={17}/>Practice prompt {index+1}</span><strong>{scenario.title}</strong><p>{scenario.copy}</p></article>)}</div>
@@ -86,7 +92,7 @@ export function UseCasePage({
 
       <section className="section container faqSection" aria-labelledby="use-case-faq"><div className="sectionHeading narrow"><p className="eyebrow">Common questions</p><h2 id="use-case-faq">Before you begin</h2></div><div className="faqGrid">{faq.map(({question,answer})=><details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</div></section>
 
-      <section className="container finalCta"><div><p className="eyebrow">Start with your own voice</p><h2>Your next answer can be stronger.</h2><p>Create an account and get 3 complete AI reviews free each month.</p></div><Link className="button buttonLime" href="/signup">Start practising <ArrowRight size={18}/></Link></section>
+      <section className="container finalCta"><div><p className="eyebrow">Start with your own voice</p><h2>Your next answer can be stronger.</h2><p>Preview a real prompt, then create an account for 3 complete AI reviews free each month.</p></div><TrackedLink className="button buttonLime" href={previewHref} event="primary_cta_clicked" properties={{ placement: "use_case_final", destination: "practice_preview" }}>Start practising <ArrowRight size={18}/></TrackedLink></section>
     </main>
     <Footer />
   </>;

@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { authErrorMessage, classifyAuthError } from "@/lib/auth-errors";
 import { appUrl, isSupabaseConfigured } from "@/lib/env";
-import { safeReturnPath } from "@/lib/navigation";
+import { safeReturnPath, scenarioFromReturnPath } from "@/lib/navigation";
+import { trackSignupCompleted } from "@/lib/server-analytics";
 import { createClient } from "@/lib/supabase/server";
 
 export async function signup(requestedPlan: string, requestedNext: string, formData: FormData) {
@@ -30,6 +31,8 @@ export async function signup(requestedPlan: string, requestedNext: string, formD
     const category = classifyAuthError(error.message);
     redirect(`/signup?error=${encodeURIComponent(authErrorMessage(category, "signup"))}&error_category=${category}${retrySuffix}`);
   }
+  const intent = scenarioFromReturnPath(next) ? "practice" : tier ? "plan" : "general";
+  await trackSignupCompleted(intent, next);
   const completed = new URLSearchParams({ message: "Check your email to confirm your account", registration: "completed", next });
   redirect(`/login?${completed.toString()}`);
 }

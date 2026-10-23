@@ -5,6 +5,7 @@ import { FunnelPageEvent, TrackedLink } from "@/components/analytics-events";
 import { Footer } from "@/components/footer";
 import { PricingCards } from "@/components/pricing-cards";
 import { SiteHeader } from "@/components/site-header";
+import { practicePreviewHref } from "@/lib/navigation";
 import { jsonLd, publicPageMetadata, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = publicPageMetadata({
@@ -79,7 +80,7 @@ export default function HomePage() {
             <h1>Know the answer. Struggle to say it?</h1>
             <p className="heroLead">Practise real interview questions aloud. Get feedback on clarity, structure and relevance, then try again in your own voice.</p>
             <div className="heroActions">
-              <TrackedLink className="button buttonLime" href="/practice-preview?scenario=hr_intro" event="primary_cta_clicked" properties={{ placement: "hero", destination: "practice_preview" }}>Practise your first answer free <ArrowRight size={18} /></TrackedLink>
+              <TrackedLink className="button buttonLime" href={practicePreviewHref("hr_intro")} event="primary_cta_clicked" properties={{ placement: "hero", destination: "practice_preview" }}>Practise your first answer free <ArrowRight size={18} /></TrackedLink>
               <Link className="textLink" href="#how-it-works">See how it works</Link>
             </div>
             <div className="trustRow"><span>3 free AI reviews every month</span><span>No card required</span><span>Built for Indian careers</span></div>
@@ -137,7 +138,7 @@ export default function HomePage() {
 
         <section className="container finalCta">
           <div><p className="eyebrow">Your next career moment</p><h2>Don’t practise in your head.</h2><p>Say the answer. Improve it. Walk in ready.</p></div>
-          <TrackedLink className="button buttonLime" href="/practice-preview?scenario=hr_intro" event="primary_cta_clicked" properties={{ placement: "final", destination: "practice_preview" }}>Practise your first answer free <ArrowRight size={18} /></TrackedLink>
+          <TrackedLink className="button buttonLime" href={practicePreviewHref("hr_intro")} event="primary_cta_clicked" properties={{ placement: "final", destination: "practice_preview" }}>Practise your first answer free <ArrowRight size={18} /></TrackedLink>
         </section>
       </main>
       <Footer />

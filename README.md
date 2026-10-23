@@ -42,7 +42,9 @@ Open `http://localhost:3000`. Without Supabase credentials the public pages stil
 
 - Free: 3 complete AI reviews per calendar month
 - Interview Sprint: ₹39 once, 10 reviews for 7 days
-- Pro Monthly: ₹79 for 30 days, 25 reviews
-- Pro Annual: ₹599 for 365 days, 25 reviews per calendar month
+- Pro Monthly: ₹79 for 31 days, 25 reviews
+- Pro Annual: ₹599 for 366 days, 25 reviews per calendar month
+
+All paid plans currently allow every career track. Interview Sprint is positioned for urgent interview preparation, but the database entitlement is quota- and duration-based rather than track-restricted.
 
 The one-week Sprint captures urgent interview intent without forcing a subscription. Until Razorpay Subscriptions is approved, Monthly and Annual are one-time passes with manual renewal. Usage limits protect voice-inference margins.

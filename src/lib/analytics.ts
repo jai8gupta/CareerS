@@ -6,7 +6,11 @@ import { campaignKeys, sanitizeCampaignValue, type CampaignAttribution } from "@
 type Primitive = string | number | boolean | null;
 type FunnelEventMap = {
   landing_viewed: { page: "home" };
-  primary_cta_clicked: { placement: "hero" | "header" | "final"; destination: "practice_preview" };
+  primary_cta_clicked: {
+    placement: "hero" | "header" | "final" | "use_case_hero" | "use_case_final" | "about_final" | "pricing_plan";
+    destination: "practice_preview" | "signup";
+    plan?: string;
+  };
   practice_preview_viewed: { scenario: string };
   practice_preview_cta_clicked: { scenario: string };
   signup_page_viewed: { intent: "practice" | "plan" | "general" };

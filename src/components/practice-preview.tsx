@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, CheckCircle2, Mic2, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import { FunnelPageEvent, TrackedLink } from "@/components/analytics-events";
-import { practiceReturnPath } from "@/lib/navigation";
-import { SCENARIOS, type ScenarioId } from "@/lib/scenarios";
+import { practicePreviewSelectionHref, practiceSignupHref } from "@/lib/navigation";
+import { isScenarioId, SCENARIOS, type ScenarioId } from "@/lib/scenarios";
 import { trackFunnel } from "@/lib/analytics";
 
 const scenarioIds = Object.keys(SCENARIOS) as ScenarioId[];
@@ -16,16 +17,20 @@ const exampleFeedback = {
 };
 
 export function PracticePreview({ initialScenario = "hr_intro" }: { initialScenario?: ScenarioId }) {
-  const [scenarioId, setScenarioId] = useState<ScenarioId>(initialScenario);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedFromUrl = searchParams.get("scenario");
+  const scenarioId = isScenarioId(selectedFromUrl) ? selectedFromUrl : initialScenario;
   const scenario = SCENARIOS[scenarioId];
-  const signupHref = useMemo(() => {
-    const next = practiceReturnPath(scenarioId);
-    return `/signup?next=${encodeURIComponent(next)}`;
-  }, [scenarioId]);
+  const signupHref = useMemo(() => practiceSignupHref(scenarioId), [scenarioId]);
 
   useEffect(() => {
     trackFunnel("practice_prompt_viewed", { scenario: scenarioId }, { once: `preview_prompt:${scenarioId}` });
   }, [scenarioId]);
+
+  function chooseScenario(id: ScenarioId) {
+    router.push(practicePreviewSelectionHref(new URLSearchParams(searchParams.toString()), id), { scroll: false });
+  }
 
   return (
     <>
@@ -46,7 +51,7 @@ export function PracticePreview({ initialScenario = "hr_intro" }: { initialScena
                 key={id}
                 className={id === scenarioId ? "active" : ""}
                 aria-pressed={id === scenarioId}
-                onClick={() => setScenarioId(id)}
+                onClick={() => chooseScenario(id)}
               >
                 {SCENARIOS[id].track}
               </button>

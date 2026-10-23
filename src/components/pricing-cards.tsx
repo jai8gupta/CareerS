@@ -1,12 +1,7 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { PLANS } from "@/lib/plans";
-
-const benefits = {
-  sprint: ["10 AI reviews", "7 days of access", "Interview tracks", "Progress history"],
-  monthly: ["25 AI reviews", "30 days of access", "All career tracks", "Hinglish coaching"],
-  annual: ["25 AI reviews/month", "365 days of access", "All career tracks", "Best effective price"],
-};
+import { TrackedLink } from "@/components/analytics-events";
+import { planBenefits, PLANS } from "@/lib/plans";
 
 export function PricingCards({ signedIn = false, subscriptionsEnabled = false }: { signedIn?: boolean; subscriptionsEnabled?: boolean }) {
   return (
@@ -20,11 +15,13 @@ export function PricingCards({ signedIn = false, subscriptionsEnabled = false }:
             <div className="price"><strong>{plan.displayPrice}</strong><span>{id === "sprint" || subscriptionsEnabled ? plan.cadence : id === "monthly" ? "/30 days" : "/365 days"}</span></div>
             <p className="priceDescription">{plan.description}</p>
             <ul className="benefitList">
-              {benefits[id].map((benefit) => <li key={benefit}><Check size={17} />{benefit}</li>)}
+              {planBenefits(id).map((benefit) => <li key={benefit}><Check size={17} />{benefit}</li>)}
             </ul>
-            <Link className={`button ${id === "annual" ? "buttonLime" : "buttonOutline"}`} href={signedIn ? `/pricing?checkout=${id}` : `/signup?tier=${id}`}>
-              {id === "sprint" ? "Start my sprint" : subscriptionsEnabled ? `Choose ${plan.name.replace("Pro ", "")}` : `Buy ${id === "monthly" ? "30-day" : "annual"} pass`}
-            </Link>
+            {signedIn ? <Link className={`button ${id === "annual" ? "buttonLime" : "buttonOutline"}`} href={`/pricing?checkout=${id}`}>
+              {id === "sprint" ? "Start my sprint" : subscriptionsEnabled ? `Choose ${plan.name.replace("Pro ", "")}` : `Buy ${plan.durationDays}-day pass`}
+            </Link> : <TrackedLink className={`button ${id === "annual" ? "buttonLime" : "buttonOutline"}`} href={`/signup?tier=${id}`} event="primary_cta_clicked" properties={{ placement: "pricing_plan", destination: "signup", plan: id }}>
+              {id === "sprint" ? "Start my sprint" : subscriptionsEnabled ? `Choose ${plan.name.replace("Pro ", "")}` : `Buy ${plan.durationDays}-day pass`}
+            </TrackedLink>}
           </article>
         );
       })}

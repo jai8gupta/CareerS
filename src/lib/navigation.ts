@@ -10,6 +10,15 @@ export function sanitizeCampaignValue(value: string | null | undefined) {
   return /^[a-zA-Z0-9._ -]+$/.test(normalized) ? normalized : "";
 }
 
+export function campaignAttributionFromSearchParams(searchParams: URLSearchParams) {
+  const attribution: CampaignAttribution = {};
+  for (const key of campaignKeys) {
+    const value = sanitizeCampaignValue(searchParams.get(key));
+    if (value) attribution[key] = value;
+  }
+  return attribution;
+}
+
 export function safeReturnPath(value: string | null | undefined, fallback = "/dashboard") {
   if (!value || !value.startsWith("/") || value.startsWith("//") || value.length > 800) return fallback;
   try {
@@ -19,6 +28,10 @@ export function safeReturnPath(value: string | null | undefined, fallback = "/da
   } catch {
     return fallback;
   }
+}
+
+export function loginHref(returnPath: string) {
+  return `/login?next=${encodeURIComponent(safeReturnPath(returnPath))}`;
 }
 
 export function scenarioFromReturnPath(value: string | null | undefined): ScenarioId | null {
@@ -35,6 +48,20 @@ export function practiceReturnPath(scenario: ScenarioId, attribution: CampaignAt
     if (value) params.set(key, value);
   }
   return `/dashboard?${params.toString()}`;
+}
+
+export function practicePreviewHref(scenario: ScenarioId) {
+  return `/practice-preview?scenario=${scenario}`;
+}
+
+export function practicePreviewSelectionHref(searchParams: URLSearchParams, scenario: ScenarioId) {
+  const params = new URLSearchParams(searchParams.toString());
+  params.set("scenario", scenario);
+  return `/practice-preview?${params.toString()}`;
+}
+
+export function practiceSignupHref(scenario: ScenarioId, attribution: CampaignAttribution = {}) {
+  return `/signup?next=${encodeURIComponent(practiceReturnPath(scenario, attribution))}`;
 }
 
 export function attributedHref(href: string, searchParams: URLSearchParams) {

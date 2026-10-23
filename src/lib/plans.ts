@@ -38,3 +38,22 @@ export type PlanId = keyof typeof PLANS;
 export function isPlanId(value: unknown): value is PlanId {
   return typeof value === "string" && value in PLANS;
 }
+
+export const FREE_PLAN = {
+  reviews: 3,
+  reviewPeriod: "calendar month",
+  trackAccess: "All career tracks",
+} as const;
+
+export function planBenefits(planId: PlanId) {
+  const plan = PLANS[planId];
+  const reviewAllowance = planId === "annual"
+    ? `${plan.reviews} AI reviews per calendar month`
+    : `${plan.reviews} AI reviews`;
+  const finalBenefit = planId === "sprint"
+    ? "Progress history"
+    : planId === "monthly"
+      ? "Hinglish coaching"
+      : "Monthly review allowance resets";
+  return [reviewAllowance, `${plan.durationDays} days of access`, "All career tracks", finalBenefit];
+}
