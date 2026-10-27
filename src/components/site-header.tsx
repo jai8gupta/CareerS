@@ -3,7 +3,19 @@ import { TrackedLink } from "@/components/analytics-events";
 import { practicePreviewHref } from "@/lib/navigation";
 import { Logo } from "@/components/logo";
 
-export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
+type SiteHeaderProps = {
+  signedIn?: boolean;
+  ctaHref?: string;
+  ctaLabel?: string;
+  ctaDestination?: "practice_preview" | "signup";
+};
+
+export function SiteHeader({
+  signedIn = false,
+  ctaHref = practicePreviewHref("hr_intro"),
+  ctaLabel = "Start free",
+  ctaDestination = "practice_preview",
+}: SiteHeaderProps) {
   return (
     <header className="siteHeader">
       <div className="container headerInner">
@@ -17,7 +29,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
           ) : (
             <>
               <Link href="/login">Sign in</Link>
-              <TrackedLink className="button buttonDark buttonSmall" href={practicePreviewHref("hr_intro")} event="primary_cta_clicked" properties={{ placement: "header", destination: "practice_preview" }}>Start free</TrackedLink>
+              <TrackedLink className="button buttonDark buttonSmall" href={ctaHref} event="primary_cta_clicked" properties={{ placement: "header", destination: ctaDestination }}>{ctaLabel}</TrackedLink>
             </>
           )}
         </nav>

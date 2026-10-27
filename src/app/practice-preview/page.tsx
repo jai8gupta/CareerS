@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
 import { PracticePreview } from "@/components/practice-preview";
 import { SiteHeader } from "@/components/site-header";
+import { campaignAttributionFromSearchParams, practiceSignupHref } from "@/lib/navigation";
 import { isScenarioId } from "@/lib/scenarios";
 import { publicPageMetadata } from "@/lib/seo";
 
@@ -14,5 +15,12 @@ export const metadata: Metadata = publicPageMetadata({
 export default async function PracticePreviewPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const params = await searchParams;
   const initialScenario = isScenarioId(params.scenario) ? params.scenario : "hr_intro";
-  return <><SiteHeader/><main><PracticePreview initialScenario={initialScenario}/></main><Footer/></>;
+  const currentSearchParams = new URLSearchParams(
+    Object.entries(params).flatMap(([key, value]) => value ? [[key, value]] : []),
+  );
+  const signupHref = practiceSignupHref(
+    initialScenario,
+    campaignAttributionFromSearchParams(currentSearchParams),
+  );
+  return <><SiteHeader ctaHref={signupHref} ctaLabel="Join free" ctaDestination="signup"/><main className="previewMain"><PracticePreview initialScenario={initialScenario}/></main><Footer/></>;
 }

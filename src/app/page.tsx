@@ -80,12 +80,12 @@ export default function HomePage() {
             <h1>Know the answer. Struggle to say it?</h1>
             <p className="heroLead">Practise real interview questions aloud. Get feedback on clarity, structure and relevance, then try again in your own voice.</p>
             <div className="heroActions">
-              <TrackedLink className="button buttonLime" href={practicePreviewHref("hr_intro")} event="primary_cta_clicked" properties={{ placement: "hero", destination: "practice_preview" }}>Practise your first answer free <ArrowRight size={18} /></TrackedLink>
-              <Link className="textLink" href="#how-it-works">See how it works</Link>
+              <TrackedLink className="button buttonLime" href={practicePreviewHref("hr_intro")} event="primary_cta_clicked" properties={{ placement: "hero", destination: "practice_preview" }}>See a real interview question <ArrowRight size={18} /></TrackedLink>
+              <Link className="textLink" href="#feedback-preview">See example feedback</Link>
             </div>
-            <div className="trustRow"><span>3 free AI reviews every month</span><span>No card required</span><span>Built for Indian careers</span></div>
+            <div className="trustRow"><span>No signup to preview</span><span>3 free AI reviews every month</span><span>Built for Indian careers</span></div>
           </div>
-          <div className="heroDemo" aria-label="CareerSpeak feedback preview">
+          <div className="heroDemo" id="feedback-preview" aria-label="CareerSpeak feedback preview">
             <div className="demoTop"><span>HR interview · Warm-up</span><span className="livePill">Illustrative preview</span></div>
             <div className="demoPrompt"><small>Your prompt</small><h2>Tell me about yourself and why you’re interested in this role.</h2></div>
             <div className="waveRow"><span className="micCircle"><Mic2 size={22} /></span><div className="wave" aria-hidden="true">{[12,24,34,18,42,28,14,38,48,22,32,16,40,25,12,30].map((height, index) => <i style={{ height }} key={index} />)}</div><span>01:08</span></div>

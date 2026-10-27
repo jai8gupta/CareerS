@@ -89,6 +89,17 @@ export function PracticePreview({ initialScenario = "hr_intro" }: { initialScena
           <p className="previewFinePrint">Your question is saved through signup. AI endpoints and free-review limits remain protected.</p>
         </div>
       </section>
+      <div className="previewStickyCta" aria-label="Create a free account for the selected practice question">
+        <div><strong>{scenario.track}</strong><span>3 free AI reviews</span></div>
+        <TrackedLink
+          className="button buttonLime buttonSmall"
+          href={signupHref}
+          event="practice_preview_cta_clicked"
+          properties={{ scenario: scenarioId }}
+        >
+          Create free account <ArrowRight size={16}/>
+        </TrackedLink>
+      </div>
     </>
   );
 }
