@@ -10,8 +10,12 @@ describe("public acquisition CTAs", () => {
   it("routes homepage practice CTAs through the interview preview", () => {
     const html = renderToStaticMarkup(createElement(HomePage));
     expect(html).toContain("/practice-preview?scenario=hr_intro");
+    expect(html).toContain("/practice-preview?scenario=technical_story");
+    expect(html).toContain("/practice-preview?scenario=delayed_update");
+    expect(html).toContain("/practice-preview?scenario=unhappy_client");
     expect(html).toContain("See a real interview question");
     expect(html).toContain('href="#feedback-preview"');
+    expect(html).toContain("Start with a question you might face this week.");
   });
 
   it("allows the preview header to send visitors directly to contextual signup", () => {

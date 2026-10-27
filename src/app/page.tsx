@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, BarChart3, BriefcaseBusiness, Mic2, RefreshCw, Sparkles } from "lucide-react";
+import { ArrowRight, BarChart3, BriefcaseBusiness, Code2, MessageCircleMore, Mic2, RefreshCw, Sparkles, UserRound } from "lucide-react";
 import { FunnelPageEvent, TrackedLink } from "@/components/analytics-events";
 import { Footer } from "@/components/footer";
 import { PricingCards } from "@/components/pricing-cards";
@@ -19,6 +19,37 @@ const faqItems = [
   { question: "Do I need fluent English to begin?", answer: "No. CareerSpeak is designed for professionals improving clarity and confidence. You can speak naturally, including the occasional Hindi phrase, and focus on making each answer stronger." },
   { question: "How does the AI feedback work?", answer: "After you speak or type an answer, CareerSpeak reviews its clarity, structure and relevance, highlights what worked and suggests a stronger version to retry." },
   { question: "Can I try CareerSpeak for free?", answer: "Yes. Every account includes 3 complete AI reviews each month with no card required." },
+] as const;
+
+const quickStarts = [
+  {
+    scenario: "hr_intro",
+    label: "HR interview",
+    title: "Tell me about yourself",
+    copy: "Turn your experience into a clear 60–90 second introduction.",
+    icon: UserRound,
+  },
+  {
+    scenario: "technical_story",
+    label: "Technical interview",
+    title: "Explain a difficult problem",
+    copy: "Show your decisions, trade-offs and measurable result without rambling.",
+    icon: Code2,
+  },
+  {
+    scenario: "delayed_update",
+    label: "Manager update",
+    title: "Explain a project delay",
+    copy: "Share the status, impact and recovery plan with calm ownership.",
+    icon: BriefcaseBusiness,
+  },
+  {
+    scenario: "unhappy_client",
+    label: "Client conversation",
+    title: "Respond to an unhappy client",
+    copy: "Acknowledge the concern and propose a confident next step.",
+    icon: MessageCircleMore,
+  },
 ] as const;
 
 export default function HomePage() {
@@ -90,6 +121,37 @@ export default function HomePage() {
             <div className="demoPrompt"><small>Your prompt</small><h2>Tell me about yourself and why you’re interested in this role.</h2></div>
             <div className="waveRow"><span className="micCircle"><Mic2 size={22} /></span><div className="wave" aria-hidden="true">{[12,24,34,18,42,28,14,38,48,22,32,16,40,25,12,30].map((height, index) => <i style={{ height }} key={index} />)}</div><span>01:08</span></div>
             <div className="scorePreview"><div><strong>3</strong><span>review areas</span></div><p><b>Example feedback:</b> Strong structure. Add one measurable result to make your answer memorable.</p></div>
+            <div className="demoMetrics" aria-label="Example answer review">
+              <span><small>Clarity</small><strong>Strong</strong></span>
+              <span><small>Structure</small><strong>Clear</strong></span>
+              <span><small>Relevance</small><strong>Add proof</strong></span>
+            </div>
+          </div>
+        </section>
+
+        <section className="quickStartSection" aria-labelledby="quick-start-title">
+          <div className="container">
+            <div className="quickStartHeading">
+              <div><p className="eyebrow">Choose what is coming up</p><h2 id="quick-start-title">Start with a question you might face this week.</h2></div>
+              <p>No generic lesson plan. Preview a real prompt, then create a free account only when you are ready to answer it.</p>
+            </div>
+            <div className="quickStartRail">
+              {quickStarts.map(({ scenario, label, title, copy, icon: Icon }) => (
+                <TrackedLink
+                  className="quickStartCard"
+                  href={practicePreviewHref(scenario)}
+                  event="primary_cta_clicked"
+                  properties={{ placement: "scenario_picker", destination: "practice_preview", scenario }}
+                  key={scenario}
+                >
+                  <span className="quickStartIcon"><Icon size={20}/></span>
+                  <span className="quickStartLabel">{label}</span>
+                  <strong>{title}</strong>
+                  <span className="quickStartCopy">{copy}</span>
+                  <span className="quickStartAction">Preview this question <ArrowRight size={16}/></span>
+                </TrackedLink>
+              ))}
+            </div>
           </div>
         </section>
 
